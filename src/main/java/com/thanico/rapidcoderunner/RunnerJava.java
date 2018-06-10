@@ -1,4 +1,5 @@
 package com.thanico.rapidcoderunner;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -26,6 +27,9 @@ public class RunnerJava {
 	 */
 	private String workingDirectory = null;
 
+	/**
+	 * The path to java
+	 */
 	private String JAVA_HOME = null;
 
 	/**
@@ -57,6 +61,16 @@ public class RunnerJava {
 	 * simple logger
 	 */
 	private org.slf4j.Logger Log = org.slf4j.LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * Execution status
+	 */
+	private StringBuilder execStatus = new StringBuilder();
+
+	/**
+	 * New line
+	 */
+	private final static String NL = "\n";
 
 	/**
 	 * Constructor
@@ -176,9 +190,12 @@ public class RunnerJava {
 		}
 
 		try {
+			this.getExecStatus().append("Compilation result :" + NL);
 			Process proc = Runtime.getRuntime().exec(execJavac);
 			this.readProcessStream(proc);
+			this.getExecStatus().append("----------------------" + NL + NL);
 		} catch (IOException e) {
+			this.getExecStatus().append("Error while executing compile command, please check logs." + NL);
 			this.Log.error("Error while executing compile command.");
 			this.handleException(e);
 			throw new RuntimeException();
@@ -195,12 +212,14 @@ public class RunnerJava {
 		this.Log.info("Running code...");
 
 		if (!this.isCompiled()) {
+			this.getExecStatus().append("Cannot run code because code is not compiled." + NL);
 			this.Log.error("Cannot run code because code is not compiled.");
 			throw new RuntimeException();
 		}
 
 		File runfile = new File(this.getWorkingDirectory() + "/" + CODEFILE_NAME + RUNFILE_EXT);
 		if (!runfile.exists()) {
+			this.getExecStatus().append("Cannot run code because code is not compiled." + NL);
 			this.Log.error("Cannot run code because code is not compiled.");
 			throw new RuntimeException();
 		}
@@ -217,9 +236,12 @@ public class RunnerJava {
 		}
 
 		try {
+			this.getExecStatus().append("Execution result :" + NL);
 			Process proc = Runtime.getRuntime().exec(execJava);
 			this.readProcessStream(proc);
+			this.getExecStatus().append("----------------------" + NL + NL);
 		} catch (IOException e) {
+			this.getExecStatus().append("Error while executing run command, please check logs." + NL);
 			this.Log.error("Error while executing run command.");
 			this.handleException(e);
 			throw new RuntimeException();
@@ -242,16 +264,20 @@ public class RunnerJava {
 		try {
 			while ((s = stdInput.readLine()) != null) {
 				if (!hasOutput) {
+					this.getExecStatus().append("Standard output : " + NL);
 					this.Log.info("Standard output : ");
 					hasOutput = true;
 				}
+				this.getExecStatus().append(s + NL);
 				System.out.println(s);
 			}
 		} catch (IOException e) {
+			this.getExecStatus().append("Error while retrieving standard output." + NL);
 			this.Log.error("Error while retrieving standard output.");
 			this.handleException(e);
 		}
 		if (!hasOutput) {
+			this.getExecStatus().append("No standard output." + NL);
 			this.Log.info("No standard output.");
 		}
 
@@ -262,16 +288,20 @@ public class RunnerJava {
 		try {
 			while ((s = stdError.readLine()) != null) {
 				if (!hasOutput) {
+					this.getExecStatus().append("Error output : " + NL);
 					this.Log.info("Error output : ");
 					hasOutput = true;
 				}
+				this.getExecStatus().append(s + NL);
 				System.out.println(s);
 			}
 		} catch (IOException e) {
+			this.getExecStatus().append("Error while retrieving error output." + NL);
 			this.Log.error("Error while retrieving error output.");
 			this.handleException(e);
 		}
 		if (!hasOutput) {
+			this.getExecStatus().append("No error output." + NL);
 			this.Log.info("No error output.");
 		}
 	}
@@ -309,5 +339,9 @@ public class RunnerJava {
 
 	private void setCompiled(boolean compiled) {
 		this.compiled = compiled;
+	}
+
+	public StringBuilder getExecStatus() {
+		return this.execStatus;
 	}
 }

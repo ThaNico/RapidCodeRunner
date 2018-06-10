@@ -1,9 +1,11 @@
 package com.thanico.rapidcoderunner;
 
 public class RapidCodeRunner {
+
+	public final static String JAVA_HOME = "C:\\Program Files\\Java\\jdk1.8.0_144";
+
 	public static void main(String[] args) {
 
-		String JAVA_HOME = "C:\\Program Files\\Java\\jdk1.8.0_144";
 		String JAVA_CODE = "System.out.println(\"Hello world\");";
 
 		RunnerJava javaRunner = new RunnerJava(JAVA_HOME, JAVA_CODE);
