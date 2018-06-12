@@ -2,6 +2,8 @@
 # RapidCodeRunner
 Tool used to test various code snippets (java for now)
 
+![](https://i.imgur.com/6kHa3MH.gif)
+
 ## TODO
 * **GUI improvments**
 * measure snippet execution time
