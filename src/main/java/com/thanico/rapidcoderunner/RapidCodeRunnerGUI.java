@@ -17,12 +17,9 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class RapidCodeRunnerGUI extends Application {
@@ -53,6 +50,11 @@ public class RapidCodeRunnerGUI extends Application {
 	private final static String runningTextAreaId = "runningTextArea";
 
 	/**
+	 * btnCompile element id
+	 */
+	private final static String btnCompileId = "btnCompile";
+
+	/**
 	 * Main
 	 *
 	 * @param args
@@ -72,7 +74,8 @@ public class RapidCodeRunnerGUI extends Application {
 		int screenHeight = gd.getDisplayMode().getHeight() - 100;
 
 		Group root = new Group();
-		scene = new Scene(root, screenWidth, screenHeight, Color.TRANSPARENT);
+		scene = new Scene(root, screenWidth, screenHeight);
+		scene.getStylesheets().add("css/rcr.css");
 
 		TabPane tabPane = new TabPane();
 		tabPane.setId(tabPaneId);
@@ -83,8 +86,8 @@ public class RapidCodeRunnerGUI extends Application {
 		BorderPane borderPane = new BorderPane();
 		borderPane.prefHeightProperty().bind(scene.heightProperty());
 		borderPane.prefWidthProperty().bind(scene.widthProperty());
-		borderPane.setBackground(new Background(new BackgroundFill(Color.POWDERBLUE, null, null)));
 		borderPane.setCenter(tabPane);
+
 		root.getChildren().add(borderPane);
 
 		primaryStage.setScene(scene);
@@ -107,9 +110,8 @@ public class RapidCodeRunnerGUI extends Application {
 
 		vboxCode.getChildren().addAll(hboxHeaderButtons, this.createCodeTextArea());
 
-		Tab codeTab = new Tab("Code", vboxCode);
+		Tab codeTab = new Tab("CODE", vboxCode);
 		codeTab.setClosable(false);
-
 		return codeTab;
 	}
 
@@ -119,7 +121,8 @@ public class RapidCodeRunnerGUI extends Application {
 	 * @return
 	 */
 	private Node createBtnCompile() {
-		Button btnCompile = new Button("Compile");
+		Button btnCompile = new Button("COMPILE");
+		btnCompile.setId(btnCompileId);
 		btnCompile.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -168,7 +171,7 @@ public class RapidCodeRunnerGUI extends Application {
 		codeTextArea.setPadding(new Insets(10));
 		codeTextArea.setId(codeTextAreaId);
 		codeTextArea.setText("System.out.println(\"Hello world\");");
-		codeTextArea.setMinHeight(getScene().heightProperty().doubleValue() - 100);
+		codeTextArea.setPrefHeight(getScene().heightProperty().doubleValue() - 100);
 		return codeTextArea;
 	}
 
@@ -178,15 +181,15 @@ public class RapidCodeRunnerGUI extends Application {
 	 * @return
 	 */
 	private Tab createResultTab() {
-		Node leftSide = this.createResultTextArea(compileTextAreaId, "Compilation result");
-		Node rightSide = this.createResultTextArea(runningTextAreaId, "Execution result");
+		Node leftSide = this.createResultTextArea(compileTextAreaId, "COMPILATION");
+		Node rightSide = this.createResultTextArea(runningTextAreaId, "EXECUTION");
 
 		HBox hboxRes = new HBox(10);
 		hboxRes.setPadding(new Insets(10));
 		hboxRes.setAlignment(Pos.CENTER);
 		hboxRes.getChildren().addAll(leftSide, rightSide);
 
-		Tab execTab = new Tab("Result", hboxRes);
+		Tab execTab = new Tab("RESULT", hboxRes);
 		execTab.setClosable(false);
 		return execTab;
 	}
@@ -213,7 +216,10 @@ public class RapidCodeRunnerGUI extends Application {
 		resTextArea.setFocusTraversable(false);
 		resTextArea.setPrefWidth(getScene().widthProperty().doubleValue() / 2);
 
-		vboxRes.getChildren().addAll(new Label(elementLabel), resTextArea);
+		Label resLabel = new Label(elementLabel);
+		resLabel.setId(elementId + "_label");
+		resLabel.setPrefWidth(resTextArea.getPrefWidth());
+		vboxRes.getChildren().addAll(resLabel, resTextArea);
 
 		return vboxRes;
 	}

@@ -1,0 +1,85 @@
+#tabPane {
+	-fx-background-color: #166984;
+}
+
+
+/**
+	TEXTAREAS
+**/
+#codeTextArea {
+	-fx-background-color: transparent;
+	-fx-font-size: 13px;
+	-fx-font-family: "Lucida Console", Monaco, monospace;
+}
+
+#compileTextArea, #runningTextArea {
+	-fx-background-color: #307890;
+	-fx-font-size: 13px;
+}
+
+#compileTextArea_label, #runningTextArea_label {
+	-fx-font-size:16px;
+	-fx-background-color: #307890;
+	-fx-alignment: CENTER;
+	-fx-text-fill: #330F00;
+    -fx-padding: 3 30 3 30;
+}
+
+/**
+	TABS
+**/
+.tab-pane:top *.tab-header-area {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+	-fx-opacity: 1;
+	-fx-background-color: #2A3437;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 100px;
+}
+
+.tab {
+    -fx-background-insets: 0;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #0B1300;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #166984;
+}
+
+.tab .tab-label { 
+    -fx-alignment: CENTER;
+    -fx-text-fill: #166984;
+    -fx-font-size: 12px;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #0B1300;
+    -fx-font-size: 15px;
+}
+
+
+/**
+	COMPILATION BUTTON
+**/
+#btnCompile {
+	-fx-background-color: #AA5B39;
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: #330F00;
+    -fx-font-size: 14px;
+}
+
+#btnCompile:hover {
+    -fx-background-color: #803515;
+}
+
+#btnCompile:pressed {
+    -fx-text-fill: white;
+}

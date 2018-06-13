@@ -2,18 +2,21 @@
 # RapidCodeRunner
 Tool used to test various code snippets (java for now)
 
-![](https://i.imgur.com/6kHa3MH.gif)
+![](https://i.imgur.com/HS0q5pL.gif)
 
 ## TODO
-* **GUI improvments**
 * measure snippet execution time
 * Unit tests
 * include different JDK versions
+* syntax highlighting
+* add line numbers
 * add other programming languages?
 
 ## Changelog
+### 0.2.1-SNAPSHOT
+* GUI improvments (JFX CSS) [GUI preview](https://i.imgur.com/HS0q5pL.gif)
 ### 0.2.0-SNAPSHOT
-* minimalist GUI (JavaFX)
+* minimalist GUI (JavaFX) [GUI preview](https://i.imgur.com/6kHa3MH.gif)
 ### 0.1.2-SNAPSHOT
 * separate execution status (compile and running via 2 StringBuilders)
 ### 0.1.1-SNAPSHOT
