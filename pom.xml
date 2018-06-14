@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.thanico.rapidcoderunner</groupId>
 	<artifactId>RapidCodeRunner</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.2-SNAPSHOT</version>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>

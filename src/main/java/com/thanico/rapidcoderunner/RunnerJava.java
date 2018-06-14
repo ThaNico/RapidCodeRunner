@@ -68,9 +68,19 @@ public class RunnerJava {
 	private StringBuilder compileStatus = new StringBuilder();
 
 	/**
+	 * Compilation time
+	 */
+	private long compileTime;
+
+	/**
 	 * Running status
 	 */
 	private StringBuilder runningStatus = new StringBuilder();
+
+	/**
+	 * Execution time
+	 */
+	private long runningTime;
 
 	/**
 	 * New line
@@ -182,7 +192,7 @@ public class RunnerJava {
 	/**
 	 * Compiles before execution
 	 */
-	public void compile() {
+	public void compile() throws RuntimeException {
 		this.Log.info("Compiling source code file...");
 
 		// program params :
@@ -195,8 +205,12 @@ public class RunnerJava {
 		}
 
 		try {
+			long startTime = System.currentTimeMillis();
 			Process proc = Runtime.getRuntime().exec(execJavac);
 			this.readProcessStream(proc, this.getCompileStatus());
+
+			// TODO : check if measurement can be more effective
+			this.setCompileTime(System.currentTimeMillis() - startTime);
 		} catch (IOException e) {
 			this.getCompileStatus().append("Error while executing compile command, please check logs." + NL);
 			this.Log.error("Error while executing compile command.");
@@ -211,7 +225,7 @@ public class RunnerJava {
 	/**
 	 * Runs the code
 	 */
-	public void runcode() {
+	public void runcode() throws RuntimeException {
 		this.Log.info("Running code...");
 
 		if (!this.isCompiled()) {
@@ -239,8 +253,12 @@ public class RunnerJava {
 		}
 
 		try {
+			long startTime = System.currentTimeMillis();
 			Process proc = Runtime.getRuntime().exec(execJava);
 			this.readProcessStream(proc, this.getRunningStatus());
+
+			// TODO : check if measurement can be more effective
+			this.setRunningTime(System.currentTimeMillis() - startTime);
 		} catch (IOException e) {
 			this.getRunningStatus().append("Error while executing run command, please check logs." + NL);
 			this.Log.error("Error while executing run command.");
@@ -347,6 +365,22 @@ public class RunnerJava {
 
 	public StringBuilder getRunningStatus() {
 		return this.runningStatus;
+	}
+
+	public long getCompileTime() {
+		return this.compileTime;
+	}
+
+	private void setCompileTime(long compileTime) {
+		this.compileTime = compileTime;
+	}
+
+	public long getRunningTime() {
+		return this.runningTime;
+	}
+
+	private void setRunningTime(long runningTime) {
+		this.runningTime = runningTime;
 	}
 
 }

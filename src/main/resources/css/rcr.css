@@ -19,6 +19,13 @@
 
 #compileTextArea_label, #runningTextArea_label {
 	-fx-font-size:16px;
+}
+
+#compileTextArea_time, #runningTextArea_time {
+	-fx-font-size:14px;
+}
+
+#compileTextArea_label, #runningTextArea_label, #compileTextArea_time, #runningTextArea_time {
 	-fx-background-color: #307890;
 	-fx-alignment: CENTER;
 	-fx-text-fill: #330F00;

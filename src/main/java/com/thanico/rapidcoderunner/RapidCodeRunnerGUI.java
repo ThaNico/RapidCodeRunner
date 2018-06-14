@@ -2,6 +2,7 @@ package com.thanico.rapidcoderunner;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -116,7 +117,8 @@ public class RapidCodeRunnerGUI extends Application {
 	}
 
 	/**
-	 * Button executing compile action
+	 * Button executing compile action<br>
+	 * TODO make it clean
 	 *
 	 * @return
 	 */
@@ -125,6 +127,31 @@ public class RapidCodeRunnerGUI extends Application {
 		btnCompile.setId(btnCompileId);
 		btnCompile.setOnAction(new EventHandler<ActionEvent>() {
 
+			/**
+			 * Set the execution time label
+			 *
+			 * @param elementId
+			 * @param execTime
+			 */
+			private void setExecutionTime(String elementId, long execTime) {
+				Node execTimeLabel = getScene().lookup("#" + elementId + "_time");
+				if (execTimeLabel != null) {
+					// TODO clean that too
+					String formattedTime;
+					if (execTime >= 60000) {
+						formattedTime = String.format("%dmn %02dsec", TimeUnit.MILLISECONDS.toMinutes(execTime),
+								TimeUnit.MILLISECONDS.toSeconds(execTime)
+										- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(execTime)));
+					} else if (execTime >= 10000) {
+						formattedTime = String.format("%dsec %dms", TimeUnit.MILLISECONDS.toSeconds(execTime),
+								execTime - (1000 * TimeUnit.MILLISECONDS.toSeconds(execTime)));
+					} else {
+						formattedTime = execTime + "ms";
+					}
+					((Label) execTimeLabel).setText("Action took " + formattedTime);
+				}
+			}
+
 			@Override
 			public void handle(ActionEvent event) {
 				if (getScene() != null) {
@@ -132,20 +159,27 @@ public class RapidCodeRunnerGUI extends Application {
 					if (codeTextArea != null) {
 						// Get the run and run it
 						String codeContent = ((TextArea) codeTextArea).getText();
+
 						RunnerJava runner = new RunnerJava(RapidCodeRunner.JAVA_HOME, codeContent);
-						runner.compile();
-						runner.runcode();
+						try {
+							runner.compile();
+							runner.runcode();
+						} catch (Exception e) {
+							// do nothing
+						}
 
 						// Print the compile status
 						Node compileTextArea = getScene().lookup("#" + compileTextAreaId);
 						if (compileTextArea != null) {
 							((TextArea) compileTextArea).setText(runner.getCompileStatus().toString());
+							this.setExecutionTime(compileTextAreaId, runner.getCompileTime());
 						}
 
 						// Print the execution status
 						Node runningTextArea = getScene().lookup("#" + runningTextAreaId);
 						if (runningTextArea != null) {
 							((TextArea) runningTextArea).setText(runner.getRunningStatus().toString());
+							this.setExecutionTime(runningTextAreaId, runner.getRunningTime());
 						}
 
 						// Change tab
@@ -181,8 +215,8 @@ public class RapidCodeRunnerGUI extends Application {
 	 * @return
 	 */
 	private Tab createResultTab() {
-		Node leftSide = this.createResultTextArea(compileTextAreaId, "COMPILATION");
-		Node rightSide = this.createResultTextArea(runningTextAreaId, "EXECUTION");
+		Node leftSide = this.createResultBox(compileTextAreaId, "COMPILATION");
+		Node rightSide = this.createResultBox(runningTextAreaId, "EXECUTION");
 
 		HBox hboxRes = new HBox(10);
 		hboxRes.setPadding(new Insets(10));
@@ -195,7 +229,7 @@ public class RapidCodeRunnerGUI extends Application {
 	}
 
 	/**
-	 * Create a result textarea
+	 * Create a result box
 	 *
 	 * @param elementId
 	 *            element id
@@ -203,11 +237,32 @@ public class RapidCodeRunnerGUI extends Application {
 	 *            element title above textarea
 	 * @return
 	 */
-	private Node createResultTextArea(String elementId, String elementLabel) {
+	private Node createResultBox(String elementId, String elementLabel) {
 		VBox vboxRes = new VBox(10);
 		vboxRes.setPadding(new Insets(0, 10, 0, 10));
 		vboxRes.setAlignment(Pos.CENTER);
 
+		TextArea resTextArea = this.createResultTextArea(elementId);
+
+		Label resLabel = new Label(elementLabel);
+		resLabel.setId(elementId + "_label");
+		resLabel.setPrefWidth(resTextArea.getPrefWidth());
+
+		Label timeLabel = new Label();
+		timeLabel.setId(elementId + "_time");
+		timeLabel.setPrefWidth(resTextArea.getPrefWidth());
+
+		vboxRes.getChildren().addAll(resLabel, resTextArea, timeLabel);
+		return vboxRes;
+	}
+
+	/**
+	 * Create a result textarea
+	 *
+	 * @param elementId
+	 * @return
+	 */
+	private TextArea createResultTextArea(String elementId) {
 		TextArea resTextArea = new TextArea();
 		resTextArea.setPadding(new Insets(10));
 		resTextArea.setId(elementId);
@@ -215,13 +270,7 @@ public class RapidCodeRunnerGUI extends Application {
 		resTextArea.setEditable(false);
 		resTextArea.setFocusTraversable(false);
 		resTextArea.setPrefWidth(getScene().widthProperty().doubleValue() / 2);
-
-		Label resLabel = new Label(elementLabel);
-		resLabel.setId(elementId + "_label");
-		resLabel.setPrefWidth(resTextArea.getPrefWidth());
-		vboxRes.getChildren().addAll(resLabel, resTextArea);
-
-		return vboxRes;
+		return resTextArea;
 	}
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

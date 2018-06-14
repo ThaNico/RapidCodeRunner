@@ -5,14 +5,16 @@ Tool used to test various code snippets (java for now)
 ![](https://i.imgur.com/HS0q5pL.gif)
 
 ## TODO
-* measure snippet execution time
-* Unit tests
+* Unit tests and refactoring
 * include different JDK versions
 * syntax highlighting
 * add line numbers
 * add other programming languages?
 
 ## Changelog
+### 0.2.2-SNAPSHOT
+* Manage compilation errors
+* Print compilation/execution time
 ### 0.2.1-SNAPSHOT
 * GUI improvments (JFX CSS) [GUI preview](https://i.imgur.com/HS0q5pL.gif)
 ### 0.2.0-SNAPSHOT
