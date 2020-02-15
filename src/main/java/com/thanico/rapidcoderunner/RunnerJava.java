@@ -10,6 +10,8 @@ import java.io.PrintWriter;
 
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
+import com.thanico.rapidcoderunner.ui.lang.RapidCodeRunnerMessages;
+
 /**
  * Class used to compile and run java code
  *
@@ -35,22 +37,22 @@ public class RunnerJava {
 	/**
 	 * code runner exec
 	 */
-	private final static String JAVA_PATH = "/bin/java.exe";
+	protected final static String JAVA_PATH = "/bin/java.exe";
 
 	/**
 	 * code compiler exec
 	 */
-	private final static String JAVAC_PATH = "/bin/javac.exe";
+	protected final static String JAVAC_PATH = "/bin/javac.exe";
 
 	/**
 	 * filename + classname
 	 */
-	private final static String CODEFILE_NAME = "ExampleProgram";
+	protected final static String CODEFILE_NAME = "ExampleProgram";
 
 	/**
 	 * source code extension
 	 */
-	private final static String CODEFILE_EXT = ".java";
+	protected final static String CODEFILE_EXT = ".java";
 
 	/**
 	 * run code extension
@@ -87,6 +89,10 @@ public class RunnerJava {
 	 */
 	private final static String NL = "\n";
 
+	protected RunnerJava() {
+
+	}
+
 	/**
 	 * Constructor
 	 *
@@ -95,7 +101,7 @@ public class RunnerJava {
 	 */
 	public RunnerJava(String JAVA_HOME, String code) {
 		this.Log.info("Initializing runner java...");
-		this.JAVA_HOME = JAVA_HOME;
+		this.setJavaHome(JAVA_HOME);
 
 		// cleaning compile/run directory + setting WD
 		this.cleanBefore();
@@ -170,7 +176,7 @@ public class RunnerJava {
 			classfile.createNewFile();
 		} catch (IOException e) {
 			classfile = null;
-			this.handleException(e);
+			this.handleException(e, false);
 		} finally {
 			if (classfile == null || !classfile.exists()) {
 				this.Log.error("Cannot create source code file.");
@@ -183,8 +189,7 @@ public class RunnerJava {
 			out.print(source);
 		} catch (FileNotFoundException e) {
 			this.Log.error("The source code file does not exist (" + filename + ").");
-			this.handleException(e);
-			throw new RuntimeException();
+			this.handleException(e, true);
 		}
 		this.Log.info("Writing source code in file...OK");
 	}
@@ -195,14 +200,7 @@ public class RunnerJava {
 	public void compile() throws RuntimeException {
 		this.Log.info("Compiling source code file...");
 
-		// program params :
-		// 0 : program exe
-		// 1 : file full path + name to compile
-		String[] execJavac = { this.JAVA_HOME + JAVAC_PATH,
-				this.getWorkingDirectory() + "/" + CODEFILE_NAME + CODEFILE_EXT };
-		if (this.Log.isDebugEnabled()) {
-			this.Log.debug("Compile command : " + execJavac[0] + " " + execJavac[1]);
-		}
+		String[] execJavac = this.getJavaCompileCommand();
 
 		try {
 			long startTime = System.currentTimeMillis();
@@ -215,12 +213,28 @@ public class RunnerJava {
 			this.getCompileStatus().append("Error while executing compile command." + NL);
 			this.getCompileStatus().append(e.getMessage() + NL);
 			this.Log.error("Error while executing compile command.");
-			this.handleException(e);
-			throw new RuntimeException();
+			this.handleException(e, true);
 		}
 
 		this.Log.info("Compiling source code file...OK");
 		this.setCompiled(true);
+	}
+
+	/**
+	 * Gets the array needed for the java compile command
+	 *
+	 * @return
+	 */
+	protected String[] getJavaCompileCommand() {
+		// program params :
+		// 0 : program exe
+		// 1 : file full path + name to compile
+		String[] execJavac = { this.JAVA_HOME + JAVAC_PATH,
+				this.getWorkingDirectory() + "/" + CODEFILE_NAME + CODEFILE_EXT };
+		if (this.Log.isDebugEnabled()) {
+			this.Log.debug("Compile command : " + execJavac[0] + " " + execJavac[1]);
+		}
+		return execJavac;
 	}
 
 	/**
@@ -230,28 +244,19 @@ public class RunnerJava {
 		this.Log.info("Running code...");
 
 		if (!this.isCompiled()) {
-			this.getRunningStatus().append("Cannot run code because code is not compiled." + NL);
-			this.Log.error("Cannot run code because code is not compiled.");
-			throw new RuntimeException();
+			this.getRunningStatus().append(RapidCodeRunnerMessages.ERR_CODE_NOT_COMPILED + NL);
+			this.Log.error(RapidCodeRunnerMessages.ERR_CODE_NOT_COMPILED);
+			throw new RuntimeException(RapidCodeRunnerMessages.ERR_CODE_NOT_COMPILED);
 		}
 
 		File runfile = new File(this.getWorkingDirectory() + "/" + CODEFILE_NAME + RUNFILE_EXT);
 		if (!runfile.exists()) {
-			this.getRunningStatus().append("Cannot run code because code is not compiled." + NL);
-			this.Log.error("Cannot run code because code is not compiled.");
-			throw new RuntimeException();
+			this.getRunningStatus().append(RapidCodeRunnerMessages.ERR_CLASS_FILE_MISSING + NL);
+			this.Log.error(RapidCodeRunnerMessages.ERR_CLASS_FILE_MISSING);
+			throw new RuntimeException(RapidCodeRunnerMessages.ERR_CLASS_FILE_MISSING);
 		}
 
-		// program params :
-		// 0 : program exe
-		// 1 : -cp (classpath)
-		// 2 : path containing classfile
-		// 3 : classname
-		String[] execJava = { this.JAVA_HOME + JAVA_PATH, "-cp", this.getWorkingDirectory(), CODEFILE_NAME };
-		if (this.Log.isDebugEnabled()) {
-			this.Log.debug(
-					"Compile command : " + execJava[0] + " " + execJava[1] + " " + execJava[2] + " " + execJava[3]);
-		}
+		String[] execJava = this.getJavaRunCommand();
 
 		try {
 			long startTime = System.currentTimeMillis();
@@ -263,11 +268,29 @@ public class RunnerJava {
 		} catch (IOException e) {
 			this.getRunningStatus().append("Error while executing run command, please check logs." + NL);
 			this.Log.error("Error while executing run command.");
-			this.handleException(e);
-			throw new RuntimeException();
+			this.handleException(e, true);
 		}
 
 		this.Log.info("Running code...OK");
+	}
+
+	/**
+	 * Gets the array needed for the java run command
+	 *
+	 * @return
+	 */
+	protected String[] getJavaRunCommand() {
+		// program params :
+		// 0 : program exe
+		// 1 : -cp (classpath)
+		// 2 : path containing classfile
+		// 3 : classname
+		String[] execJava = { this.JAVA_HOME + JAVA_PATH, "-cp", this.getWorkingDirectory(), CODEFILE_NAME };
+		if (this.Log.isDebugEnabled()) {
+			this.Log.debug(
+					"Compile command : " + execJava[0] + " " + execJava[1] + " " + execJava[2] + " " + execJava[3]);
+		}
+		return execJava;
 	}
 
 	/**
@@ -294,7 +317,7 @@ public class RunnerJava {
 		} catch (IOException e) {
 			builder.append("Error while retrieving standard output." + NL);
 			this.Log.error("Error while retrieving standard output.");
-			this.handleException(e);
+			this.handleException(e, false);
 		}
 		if (!hasOutput) {
 			builder.append("No standard output." + NL);
@@ -318,7 +341,7 @@ public class RunnerJava {
 		} catch (IOException e) {
 			builder.append("Error while retrieving error output." + NL);
 			this.Log.error("Error while retrieving error output.");
-			this.handleException(e);
+			this.handleException(e, false);
 		}
 		if (!hasOutput) {
 			this.Log.info("No error output.");
@@ -331,12 +354,16 @@ public class RunnerJava {
 	 * @param e
 	 *              exception
 	 */
-	private void handleException(Exception e) {
+	private void handleException(Exception e, boolean throwRuntimeException) {
 		this.Log.error("Error message : " + e.getMessage());
 		if (this.Log.isDebugEnabled()) {
 			e.printStackTrace();
 		} else {
 			this.Log.error("Please enable debug mode to see the stacktrace.");
+		}
+
+		if (throwRuntimeException) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -347,16 +374,20 @@ public class RunnerJava {
 		return this.workingDirectory;
 	}
 
-	private void setWorkingDirectory(String workingDirectory) {
+	protected void setWorkingDirectory(String workingDirectory) {
 		this.Log.info("Working directory set to: " + workingDirectory);
 		this.workingDirectory = workingDirectory;
 	}
 
-	private boolean isCompiled() {
+	protected void setJavaHome(String JAVA_HOME) {
+		this.JAVA_HOME = JAVA_HOME;
+	}
+
+	protected boolean isCompiled() {
 		return this.compiled;
 	}
 
-	private void setCompiled(boolean compiled) {
+	protected void setCompiled(boolean compiled) {
 		this.compiled = compiled;
 	}
 
