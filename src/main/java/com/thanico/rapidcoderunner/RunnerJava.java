@@ -91,7 +91,7 @@ public class RunnerJava {
 	 * Constructor
 	 *
 	 * @param CODE
-	 *            the java code (no main/class needed)
+	 *                 the java code (no main/class needed)
 	 */
 	public RunnerJava(String JAVA_HOME, String code) {
 		this.Log.info("Initializing runner java...");
@@ -140,9 +140,9 @@ public class RunnerJava {
 	 * Removes files according to a wildcard
 	 *
 	 * @param dir
-	 *            the directory
+	 *                     the directory
 	 * @param wildcard
-	 *            the wildcard (*.java for ex)
+	 *                     the wildcard (*.java for ex)
 	 */
 	private void removeWildcardFiles(File dir, String wildcard) {
 		FileFilter fileFilter = new WildcardFileFilter(wildcard);
@@ -159,7 +159,7 @@ public class RunnerJava {
 	 * Writes source code to file
 	 *
 	 * @param source
-	 *            the source code
+	 *                   the source code
 	 */
 	private void writeSource(String source) {
 		this.Log.info("Writing source code in file...");
@@ -212,7 +212,8 @@ public class RunnerJava {
 			// TODO : check if measurement can be more effective
 			this.setCompileTime(System.currentTimeMillis() - startTime);
 		} catch (IOException e) {
-			this.getCompileStatus().append("Error while executing compile command, please check logs." + NL);
+			this.getCompileStatus().append("Error while executing compile command." + NL);
+			this.getCompileStatus().append(e.getMessage() + NL);
 			this.Log.error("Error while executing compile command.");
 			this.handleException(e);
 			throw new RuntimeException();
@@ -273,7 +274,7 @@ public class RunnerJava {
 	 * Reads the output of a process (compile/run)
 	 *
 	 * @param proc
-	 *            the process
+	 *                 the process
 	 */
 	private void readProcessStream(Process proc, StringBuilder builder) {
 		boolean hasOutput = false;
@@ -328,7 +329,7 @@ public class RunnerJava {
 	 * Exception log handling
 	 *
 	 * @param e
-	 *            exception
+	 *              exception
 	 */
 	private void handleException(Exception e) {
 		this.Log.error("Error message : " + e.getMessage());
