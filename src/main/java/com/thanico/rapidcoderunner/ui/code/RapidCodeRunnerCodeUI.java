@@ -1,9 +1,10 @@
-package com.thanico.rapidcoderunner.ui;
+package com.thanico.rapidcoderunner.ui.code;
 
-import com.thanico.rapidcoderunner.RapidCodeRunner;
-import com.thanico.rapidcoderunner.RapidCodeRunnerGUI;
-import com.thanico.rapidcoderunner.RunnerJava;
+import com.thanico.rapidcoderunner.RapidCodeRunnerApp;
+import com.thanico.rapidcoderunner.processing.RunnerJava;
 import com.thanico.rapidcoderunner.processing.utils.RapidCodeRunnerUtils;
+import com.thanico.rapidcoderunner.ui.RapidCodeRunnerUI;
+import com.thanico.rapidcoderunner.ui.result.RapidCodeRunnerResultUI;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -116,7 +117,7 @@ public class RapidCodeRunnerCodeUI {
 						// Get the code and run it
 						String codeContent = ((TextArea) codeTextArea).getText();
 
-						RunnerJava runner = new RunnerJava(RapidCodeRunner.JAVA_HOME, codeContent);
+						RunnerJava runner = new RunnerJava(RapidCodeRunnerApp.JAVA_HOME, codeContent);
 						try {
 							runner.compile();
 							runner.runcode();
@@ -141,7 +142,8 @@ public class RapidCodeRunnerCodeUI {
 						}
 
 						// Change tab
-						Node tabPane = RapidCodeRunnerCodeUI.this.getScene().lookup("#" + RapidCodeRunnerGUI.tabPaneId);
+						Node tabPane = RapidCodeRunnerCodeUI.this.getScene()
+								.lookup("#" + RapidCodeRunnerUI.tabPaneId);
 						if (tabPane != null) {
 							SingleSelectionModel<Tab> selectionModel = ((TabPane) tabPane).getSelectionModel();
 							selectionModel.select(1);

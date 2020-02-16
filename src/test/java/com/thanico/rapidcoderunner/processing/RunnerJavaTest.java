@@ -1,4 +1,4 @@
-package com.thanico.rapidcoderunner;
+package com.thanico.rapidcoderunner.processing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.thanico.rapidcoderunner.processing.RunnerJava;
 import com.thanico.rapidcoderunner.ui.lang.RapidCodeRunnerMessages;
 
 public class RunnerJavaTest {

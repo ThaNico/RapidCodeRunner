@@ -1,4 +1,4 @@
-package com.thanico.rapidcoderunner.ui;
+package com.thanico.rapidcoderunner.ui.result;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 
 /**
  * Class used to manage the code result interface
- * 
+ *
  * @author Nicolas
  *
  */
@@ -20,12 +20,12 @@ public class RapidCodeRunnerResultUI {
 	/**
 	 * compileTextArea element id
 	 */
-	protected final static String compileTextAreaId = "compileTextArea";
+	public final static String compileTextAreaId = "compileTextArea";
 
 	/**
 	 * runningTextArea element id
 	 */
-	protected final static String runningTextAreaId = "runningTextArea";
+	public final static String runningTextAreaId = "runningTextArea";
 
 	/**
 	 * current scence

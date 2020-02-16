@@ -1,10 +1,10 @@
-package com.thanico.rapidcoderunner;
+package com.thanico.rapidcoderunner.ui;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 
-import com.thanico.rapidcoderunner.ui.RapidCodeRunnerCodeUI;
-import com.thanico.rapidcoderunner.ui.RapidCodeRunnerResultUI;
+import com.thanico.rapidcoderunner.ui.code.RapidCodeRunnerCodeUI;
+import com.thanico.rapidcoderunner.ui.result.RapidCodeRunnerResultUI;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -14,12 +14,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
- * Main class to launch
- * 
+ * Main UI
+ *
  * @author Nicolas
  *
  */
-public class RapidCodeRunnerGUI extends Application {
+public class RapidCodeRunnerUI extends Application {
 
 	/**
 	 * CSS file for the UI
@@ -30,15 +30,6 @@ public class RapidCodeRunnerGUI extends Application {
 	 * tabPane element id
 	 */
 	public final static String tabPaneId = "tabPane";
-
-	/**
-	 * Main
-	 *
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Application.launch(args);
-	}
 
 	/**
 	 * UI creation
