@@ -1,4 +1,5 @@
 
+![Java CI](https://github.com/ThaNico/RapidCodeRunner/workflows/Java%20CI/badge.svg)
 # RapidCodeRunner
 Tool used to test java code snippets.
 
