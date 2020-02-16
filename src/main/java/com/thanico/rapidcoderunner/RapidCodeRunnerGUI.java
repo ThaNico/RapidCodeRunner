@@ -2,7 +2,8 @@ package com.thanico.rapidcoderunner;
 
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import java.util.concurrent.TimeUnit;
+
+import com.thanico.rapidcoderunner.processing.utils.RapidCodeRunnerUtils;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -136,18 +137,7 @@ public class RapidCodeRunnerGUI extends Application {
 			private void setExecutionTime(String elementId, long execTime) {
 				Node execTimeLabel = getScene().lookup("#" + elementId + "_time");
 				if (execTimeLabel != null) {
-					// TODO clean that too
-					String formattedTime;
-					if (execTime >= 60000) {
-						formattedTime = String.format("%dmn %02dsec", TimeUnit.MILLISECONDS.toMinutes(execTime),
-								TimeUnit.MILLISECONDS.toSeconds(execTime)
-										- TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(execTime)));
-					} else if (execTime >= 10000) {
-						formattedTime = String.format("%dsec %dms", TimeUnit.MILLISECONDS.toSeconds(execTime),
-								execTime - (1000 * TimeUnit.MILLISECONDS.toSeconds(execTime)));
-					} else {
-						formattedTime = execTime + "ms";
-					}
+					String formattedTime = RapidCodeRunnerUtils.formatTime(execTime);
 					((Label) execTimeLabel).setText("Action took " + formattedTime);
 				}
 			}
@@ -232,9 +222,9 @@ public class RapidCodeRunnerGUI extends Application {
 	 * Create a result box
 	 *
 	 * @param elementId
-	 *            element id
+	 *                         element id
 	 * @param elementLabel
-	 *            element title above textarea
+	 *                         element title above textarea
 	 * @return
 	 */
 	private Node createResultBox(String elementId, String elementLabel) {
