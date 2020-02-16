@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.thanico.rapidcoderunner.processing.RunnerJava;
 import com.thanico.rapidcoderunner.ui.lang.RapidCodeRunnerMessages;
 
 public class RunnerJavaTest {

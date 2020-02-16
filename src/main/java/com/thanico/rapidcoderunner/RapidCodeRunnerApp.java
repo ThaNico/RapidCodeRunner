@@ -10,8 +10,6 @@ import com.thanico.rapidcoderunner.ui.RapidCodeRunnerUI;
  */
 public class RapidCodeRunnerApp extends RapidCodeRunnerUI {
 
-	public static final String JAVA_HOME = "aaa";
-
 	public static void main(String[] args) {
 		RapidCodeRunnerUI.launch(args);
 	}

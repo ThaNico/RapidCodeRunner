@@ -101,6 +101,11 @@ public class RunnerJava {
 	 */
 	public RunnerJava(String JAVA_HOME, String code) {
 		this.Log.info("Initializing runner java...");
+		if (JAVA_HOME == null || JAVA_HOME.isEmpty()) {
+			this.Log.error(RapidCodeRunnerMessages.ERR_NO_JAVA_HOME_DEFINED);
+			this.getCompileStatus().append(RapidCodeRunnerMessages.ERR_NO_JAVA_HOME_DEFINED + NL);
+		}
+
 		this.setJavaHome(JAVA_HOME);
 
 		// cleaning compile/run directory + setting WD

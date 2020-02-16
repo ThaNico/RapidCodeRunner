@@ -51,7 +51,7 @@ public class RapidCodeRunnerUI extends Application {
 		tabPane.setId(tabPaneId);
 
 		// Add the code tab
-		RapidCodeRunnerCodeUI codeUI = new RapidCodeRunnerCodeUI(scene);
+		RapidCodeRunnerCodeUI codeUI = new RapidCodeRunnerCodeUI(scene, System.getenv("JAVA_HOME"));
 		tabPane.getTabs().add(codeUI.getCodeUI());
 
 		// Add the compile result tab
