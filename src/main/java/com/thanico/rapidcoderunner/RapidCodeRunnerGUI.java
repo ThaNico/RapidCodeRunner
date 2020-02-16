@@ -13,7 +13,18 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+/**
+ * Main class to launch
+ * 
+ * @author Nicolas
+ *
+ */
 public class RapidCodeRunnerGUI extends Application {
+
+	/**
+	 * CSS file for the UI
+	 */
+	private static final String CSS_FILE_PATH = "css/rcr.css";
 
 	/**
 	 * tabPane element id
@@ -39,16 +50,20 @@ public class RapidCodeRunnerGUI extends Application {
 		int screenWidth = gd.getDisplayMode().getWidth() - 100;
 		int screenHeight = gd.getDisplayMode().getHeight() - 100;
 
+		// Create the scene with css styling
 		Group root = new Group();
 		Scene scene = new Scene(root, screenWidth, screenHeight);
-		scene.getStylesheets().add("css/rcr.css");
+		scene.getStylesheets().add(CSS_FILE_PATH);
 
+		// Init the tab pane
 		TabPane tabPane = new TabPane();
 		tabPane.setId(tabPaneId);
 
+		// Add the code tab
 		RapidCodeRunnerCodeUI codeUI = new RapidCodeRunnerCodeUI(scene);
 		tabPane.getTabs().add(codeUI.getCodeUI());
 
+		// Add the compile result tab
 		RapidCodeRunnerResultUI resultUI = new RapidCodeRunnerResultUI(scene);
 		tabPane.getTabs().add(resultUI.getResultUI());
 
